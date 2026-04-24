@@ -41,7 +41,6 @@ class CategoriaController extends Controller
                 'message' => 'Categoría creado correctamente',
                 'data' => $categoria
             ], 201);
-            
         } catch (\Throwable $e) {
             return response()->json($e->getMessage(), 500);
         }
@@ -66,9 +65,24 @@ class CategoriaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Categoria $categoria)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $categoria = Categoria::find($id);
+            if (!$categoria) {
+                return response()->json(['message' => 'Categoría no encontrada'], 404);// Error 404 al no encontrar la categoría
+            }
+            $request->validate([
+                'nombre' => 'required|string|max:50|unique:categorias,nombre'
+            ]);
+            $categoria->update($request->all());
+            return response()->json([
+                'message' => 'Categoría actualizada correctamente',
+                'data' => $categoria
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json($e->getMessage(), 500);
+        }
     }
 
     /**
