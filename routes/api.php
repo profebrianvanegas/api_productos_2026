@@ -10,3 +10,4 @@ Route::get('/saludo', function (Request $request) {
 
 Route::get('/categorias', [CategoriaController::class, 'index']);
 Route::post('/categorias', [CategoriaController::class, 'store']);
+Route::put('/categorias/{id}', [CategoriaController::class, 'update']);
