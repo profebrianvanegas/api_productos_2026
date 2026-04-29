@@ -49,9 +49,15 @@ class CategoriaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Categoria $categoria)
+    public function show($id)
     {
-        //
+        $categoria = Categoria::find($id);
+
+        if(!$categoria){
+            return response()->json("No se encontro la categoria", 404);
+        }
+
+        return response()->json($categoria);
     }
 
     /**
@@ -88,8 +94,18 @@ class CategoriaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Categoria $categoria)
+    public function destroy($id)
     {
-        //
+        $categoria = Categoria::find($id);
+
+        if(!$categoria){
+            return response()->json("No se encontro la categoria", 404);
+        }
+
+        $categoria->delete();
+
+        return response()->json([
+            'message' => 'Categoría eliminada correctamente'
+        ], 204);
     }
 }
