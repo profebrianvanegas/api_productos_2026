@@ -49,9 +49,9 @@ class CategoriaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Categoria $categoria, $id)
     {
-        $categoria = Categoria::find($id);
+        $categoria = Categoria::with('productos')->find($id);
 
         if(!$categoria){
             return response()->json("No se encontro la categoria", 404);
