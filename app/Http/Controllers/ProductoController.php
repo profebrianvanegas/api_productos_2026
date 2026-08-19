@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Producto;
-use Dotenv\Exception\ValidationException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
@@ -76,9 +76,9 @@ class ProductoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Producto $producto, $id)
+    public function show($id)
     {
-        $producto = Producto::find($id)->with('categoria')->get();
+        $producto = Producto::with('categoria')->find($id);
 
         if (!$producto) {
             return response()->json("No se encontro la producto", 404);
@@ -98,7 +98,7 @@ class ProductoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Producto $producto, $id)
+    public function update(Request $request, $id)
     {
         try {
             $request->validate([
@@ -150,7 +150,7 @@ class ProductoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Producto $producto, $id)
+    public function destroy($id)
     {
         try {
             $producto = Producto::find($id);

@@ -49,7 +49,7 @@ class CategoriaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Categoria $categoria, $id)
+    public function show(Categoria $categoria, string $id)
     {
         $categoria = Categoria::with('productos')->find($id);
 
@@ -71,10 +71,10 @@ class CategoriaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         try {
-            $categoria = Categoria::find($id);
+            $categoria = Categoria::find($id, ['*']);
             if (!$categoria) {
                 return response()->json(['message' => 'Categoría no encontrada'], 404);// Error 404 al no encontrar la categoría
             }
@@ -94,9 +94,9 @@ class CategoriaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
-        $categoria = Categoria::find($id);
+        $categoria = Categoria::find($id, ['*']);
 
         if(!$categoria){
             return response()->json("No se encontro la categoria", 404);
