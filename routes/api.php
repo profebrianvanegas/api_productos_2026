@@ -9,6 +9,7 @@ Route::get('/saludo', function (Request $request) {
     return response()->json(['mensaje' => 'Hola Mundo']);
 });
 
+Route::get('/categorias/padre', [CategoriaController::class, 'showParentCategories']);
 Route::get('/categorias', [CategoriaController::class, 'index']);
 Route::get('/categorias/{id}', [CategoriaController::class, 'show']);
 Route::post('/categorias', [CategoriaController::class, 'store']);

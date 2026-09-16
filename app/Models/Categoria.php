@@ -10,7 +10,7 @@ class Categoria extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre']; // Declaro que campos voy a mostrar de mi modelo
+    protected $fillable = ['nombre', 'parent_id']; // Declaro que campos voy a mostrar de mi modelo
 
     //Relación de uno a mucho con Productos
     public function productos(): HasMany

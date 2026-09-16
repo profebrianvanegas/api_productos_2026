@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 
 class CategoriaController extends Controller
@@ -14,6 +15,12 @@ class CategoriaController extends Controller
     public function index()
     {
         $categorias = Categoria::all();
+        return response()->json($categorias);
+    }
+
+    public function showParentCategories()
+    {
+        $categorias = Categoria::whereNull('parent_id', 'and', false)->get();
         return response()->json($categorias);
     }
 
@@ -49,11 +56,11 @@ class CategoriaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Categoria $categoria, string $id)
+    public function show(string $id)
     {
         $categoria = Categoria::with('productos')->find($id);
 
-        if(!$categoria){
+        if (!$categoria) {
             return response()->json("No se encontro la categoria", 404);
         }
 
@@ -76,10 +83,16 @@ class CategoriaController extends Controller
         try {
             $categoria = Categoria::find($id, ['*']);
             if (!$categoria) {
-                return response()->json(['message' => 'Categoría no encontrada'], 404);// Error 404 al no encontrar la categoría
+                return response()->json(['message' => 'Categoría no encontrada'], 404); // Error 404 al no encontrar la categoría
             }
             $request->validate([
-                'nombre' => 'required|string|max:50|unique:categorias,nombre'
+                'nombre' => [
+                    'required',
+                    'string',
+                    'max:50',
+                    Rule::unique('categorias', 'nombre')
+                        ->ignore($categoria->id),
+                ],
             ]);
             $categoria->update($request->all());
             return response()->json([
@@ -98,7 +111,7 @@ class CategoriaController extends Controller
     {
         $categoria = Categoria::find($id, ['*']);
 
-        if(!$categoria){
+        if (!$categoria) {
             return response()->json("No se encontro la categoria", 404);
         }
 
