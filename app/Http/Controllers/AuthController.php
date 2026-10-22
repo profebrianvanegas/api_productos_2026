@@ -33,7 +33,6 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
                 'user' => $user
             ], 201);
-            
         } catch (ValidationException $e) {
             return response()->json($e->errors(), 400);
         } catch (Exception $e) {
@@ -60,12 +59,20 @@ class AuthController extends Controller
         // Borrar tokens anteriores (opcional, para sesión única)
         $user->tokens()->delete();
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        // Obtén solo los nombres de los roles
+        $roleNames = $user->roles->pluck('name'); // Utiliza pluck para obtener solo la columna 'name'
+
         return response()->json([
             'message' => 'Bienvenido ' . $user->name,
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'user' => $user,
-            'roles' => $user->getRoleNames(), // Devolver rol para el frontend
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email
+            ],
+            'role' => $roleNames[0], // Devolver rol para el frontend
         ]);
     }
     /** * Cerrar sesión del usuario autenticado (revocar el token actual). */
